@@ -4,6 +4,7 @@ const path = require("path");
 const { editTask } = require("./utils/UpdateUtils");
 
 const { addTask } = require("./utils/createTaskUtil");
+const { deletedTask } = require("./utils/DeleteTaskUtil");
 
 const { getAllTasks, getTaskById } = require("./utils/getTasksUtil");
 
@@ -16,6 +17,7 @@ app.get("/tasks", getAllTasks);
 app.get("/tasks/:id", getTaskById);
 app.post("/tasks", addTask);
 app.put("/tasks/:id", editTask);
+app.delete("/tasks/:id", deletedTask);
 
 app.use(express.static(path.join(__dirname, "public")));
 
