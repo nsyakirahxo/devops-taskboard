@@ -230,24 +230,22 @@ window.viewTask = async (id) => {
       </div>
     `;
     
-    // Link the delete button to open the confirmation modal
     const deleteBtn = document.getElementById("deleteTaskBtn");
     if (deleteBtn) {
       deleteBtn.onclick = () => {
-        // Hide view modal
         els.viewModal.classList.remove("active");
-        // Show confirm modal
+
         const confirmModal = document.getElementById("confirmDeleteModal");
         if (confirmModal) {
           confirmModal.classList.add("active");
           
-          // Setup confirm button
+
           const confirmBtn = document.getElementById("confirmDeleteBtn");
           if (confirmBtn) {
             confirmBtn.onclick = () => deleteTask(id);
           }
           
-          // Setup cancel button
+
           const cancelBtn = document.getElementById("cancelDeleteBtn");
           if (cancelBtn) {
             cancelBtn.onclick = () => {
@@ -256,7 +254,7 @@ window.viewTask = async (id) => {
             };
           }
           
-          // Setup close button
+
           const closeBtn = document.getElementById("closeConfirmModal");
           if (closeBtn) {
             closeBtn.onclick = () => {
