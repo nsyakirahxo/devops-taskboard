@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 
-const { editTask } = require("./utils/UpdateUtils");
+const { editTask } = require("./utils/updateUtils");
 
 const { addTask } = require("./utils/createTaskUtil");
 

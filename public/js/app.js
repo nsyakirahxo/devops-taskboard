@@ -229,6 +229,43 @@ window.viewTask = async (id) => {
         }
       </div>
     `;
+    
+    const deleteBtn = document.getElementById("deleteTaskBtn");
+    if (deleteBtn) {
+      deleteBtn.onclick = () => {
+        els.viewModal.classList.remove("active");
+
+        const confirmModal = document.getElementById("confirmDeleteModal");
+        if (confirmModal) {
+          confirmModal.classList.add("active");
+          
+
+          const confirmBtn = document.getElementById("confirmDeleteBtn");
+          if (confirmBtn) {
+            confirmBtn.onclick = () => deleteTask(id);
+          }
+          
+
+          const cancelBtn = document.getElementById("cancelDeleteBtn");
+          if (cancelBtn) {
+            cancelBtn.onclick = () => {
+              confirmModal.classList.remove("active");
+              els.viewModal.classList.add("active");
+            };
+          }
+          
+
+          const closeBtn = document.getElementById("closeConfirmModal");
+          if (closeBtn) {
+            closeBtn.onclick = () => {
+              confirmModal.classList.remove("active");
+              els.viewModal.classList.add("active");
+            };
+          }
+        }
+      };
+    }
+
     els.viewModal.classList.add("active");
   } catch (err) {
     alert("Failed to load task");

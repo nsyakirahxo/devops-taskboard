@@ -319,8 +319,19 @@ body {
   border-color: var(--gray-300);
 }
 
+.btn-danger {
+  background: red;
+  color: white;
+  border-color: var(--gray-300)
+}
+
 .btn-secondary:hover {
   background: var(--gray-50);
+  border-color: var(--gray-400);
+}
+
+.btn-danger:hover {
+  background: red;
   border-color: var(--gray-400);
 }
 
@@ -527,4 +538,12 @@ textarea {
   .form-row {
     grid-template-columns: 1fr;
   }
+}
+
+.modal-body h3 {
+  text-align: center;
+}
+
+.modal-body p {
+  text-align: center;
 }
