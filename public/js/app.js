@@ -67,6 +67,13 @@ function setupListeners() {
     const data = Object.fromEntries(new FormData(els.createForm));
     data.tags = state.tags;
 
+    // Validate form
+    const validation = validateCreateForm(data);
+    if (!validation.valid) {
+      alert(validation.message);
+      return;
+    }
+
     try {
       const res = await fetch(API_URL, {
         method: "POST",
@@ -76,6 +83,9 @@ function setupListeners() {
       if (!res.ok) throw new Error();
       await loadTasks();
       toggleModal(els.createModal, false);
+      els.createForm.reset();
+      state.tags = [];
+      renderTags();
       alert("Task created!");
     } catch (err) {
       alert("Failed to create task");
@@ -543,10 +553,12 @@ async function handleEditSubmit(e) {
     tags: state.editTags,
   };
 
-  if (!payload.title) {
-    alert("Title is required");
-    if (state.editRefs.title) {
-      state.editRefs.title.focus();
+  // Validate form
+  const validation = validateEditForm(payload, state.editRefs);
+  if (!validation.valid) {
+    alert(validation.message);
+    if (validation.focusField) {
+      validation.focusField.focus();
     }
     return;
   }
@@ -575,6 +587,123 @@ async function handleEditSubmit(e) {
       els.editBtn.disabled = false;
     }
   }
+}
+
+function validateCreateForm(data) {
+  // Title validation
+  if (!data.title || !data.title.trim()) {
+    return { valid: false, message: "Title is required" };
+  }
+  if (data.title.trim().length < 3) {
+    return { valid: false, message: "Title must be at least 3 characters long" };
+  }
+  if (data.title.trim().length > 100) {
+    return { valid: false, message: "Title must not exceed 100 characters" };
+  }
+
+  // Description validation (optional)
+  if (data.description && data.description.trim().length > 500) {
+    return { valid: false, message: "Description must not exceed 500 characters" };
+  }
+
+  // Priority validation - MANDATORY
+  if (!data.priority) {
+    return { valid: false, message: "Priority is required" };
+  }
+  const validPriorities = ["low", "medium", "high"];
+  if (!validPriorities.includes(data.priority.toLowerCase())) {
+    return { valid: false, message: "Please select a valid priority level (low, medium, or high)" };
+  }
+
+  // Due date validation - MANDATORY
+  if (!data.dueDate) {
+    return { valid: false, message: "Due date is required" };
+  }
+  const dueDate = new Date(data.dueDate);
+  if (isNaN(dueDate.getTime())) {
+    return { valid: false, message: "Due date is invalid" };
+  }
+
+  // Tags validation - MANDATORY
+  if (!state.tags || state.tags.length === 0) {
+    return { valid: false, message: "At least one tag is required" };
+  }
+  if (state.tags.length > 10) {
+    return { valid: false, message: "Maximum 10 tags allowed" };
+  }
+  for (let tag of state.tags) {
+    if (tag.length < 2) {
+      return { valid: false, message: "Each tag must be at least 2 characters long" };
+    }
+    if (tag.length > 20) {
+      return { valid: false, message: "Each tag must not exceed 20 characters" };
+    }
+  }
+
+  return { valid: true };
+}
+
+function validateEditForm(payload, editRefs) {
+  // Title validation
+  if (!payload.title || !payload.title.trim()) {
+    return { valid: false, message: "Title is required", focusField: editRefs.title };
+  }
+  if (payload.title.trim().length < 3) {
+    return { valid: false, message: "Title must be at least 3 characters long", focusField: editRefs.title };
+  }
+  if (payload.title.trim().length > 100) {
+    return { valid: false, message: "Title must not exceed 100 characters", focusField: editRefs.title };
+  }
+
+  // Description validation (optional)
+  if (payload.description && payload.description.trim().length > 500) {
+    return { valid: false, message: "Description must not exceed 500 characters", focusField: editRefs.description };
+  }
+
+  // Priority validation - MANDATORY
+  if (!payload.priority) {
+    return { valid: false, message: "Priority is required", focusField: editRefs.priority };
+  }
+  const validPriorities = ["low", "medium", "high"];
+  if (!validPriorities.includes(payload.priority.toLowerCase())) {
+    return { valid: false, message: "Please select a valid priority level (low, medium, or high)", focusField: editRefs.priority };
+  }
+
+  // Status validation - MANDATORY
+  if (!payload.status) {
+    return { valid: false, message: "Status is required", focusField: editRefs.status };
+  }
+  const validStatuses = ["pending", "in-progress", "completed"];
+  if (!validStatuses.includes(payload.status.toLowerCase())) {
+    return { valid: false, message: "Please select a valid status (pending, in-progress, or completed)", focusField: editRefs.status };
+  }
+
+  // Due date validation - MANDATORY
+  if (!payload.dueDate) {
+    return { valid: false, message: "Due date is required", focusField: editRefs.dueDate };
+  }
+  const dueDate = new Date(payload.dueDate);
+  if (isNaN(dueDate.getTime())) {
+    return { valid: false, message: "Due date is invalid", focusField: editRefs.dueDate };
+  }
+
+  // Tags validation - MANDATORY
+  if (!state.editTags || state.editTags.length === 0) {
+    return { valid: false, message: "At least one tag is required", focusField: editRefs.tagInput };
+  }
+  if (state.editTags.length > 10) {
+    return { valid: false, message: "Maximum 10 tags allowed", focusField: editRefs.tagInput };
+  }
+  for (let tag of state.editTags) {
+    if (tag.length < 2) {
+      return { valid: false, message: "Each tag must be at least 2 characters long", focusField: editRefs.tagInput };
+    }
+    if (tag.length > 20) {
+      return { valid: false, message: "Each tag must not exceed 20 characters", focusField: editRefs.tagInput };
+    }
+  }
+
+  return { valid: true };
 }
 
 function formatStatusLabel(status) {

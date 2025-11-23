@@ -1,5 +1,5 @@
 class Task {
-  constructor({ title, description, priority, dueDate, tags, status = [] }) {
+  constructor({ title, description, priority, dueDate, tags, status = "pending" }) {
     this.title = title;
     this.description = description;
     this.priority = priority;
