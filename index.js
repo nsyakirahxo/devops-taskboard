@@ -1,13 +1,13 @@
 const express = require("express");
 const path = require("path");
 
-const { editTask } = require("./utils/updateUtils");
+const { editTask } = require("./utils/ethanUtils");
 
-const { addTask } = require("./utils/createTaskUtil");
+const { addTask } = require("./utils/jafarUtil");
 
 const { getAllTasks, getTaskById } = require("./utils/getTasksUtil");
 
-const { deletedTask } = require("./utils/DeleteTaskUtil");
+const { deletedTask } = require("./utils/syakirahUtil");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
