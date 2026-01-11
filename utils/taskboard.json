@@ -1,3 +1,41 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Test Task 1",
+      "description": "Description 1",
+      "priority": "high",
+      "status": "pending",
+      "dueDate": "2026-01-15",
+      "tags": [
+        "test"
+      ],
+      "createdAt": "2026-01-11T12:34:00.264Z"
+    },
+    {
+      "id": "t2",
+      "title": "Test Task 2",
+      "description": "Description 2",
+      "priority": "medium",
+      "status": "in-progress",
+      "dueDate": "2026-01-20",
+      "tags": [
+        "api"
+      ],
+      "createdAt": "2026-01-11T12:34:00.264Z"
+    },
+    {
+      "id": "t3",
+      "title": "Test Task 3",
+      "description": "Description 3",
+      "priority": "low",
+      "status": "completed",
+      "dueDate": "2026-01-25",
+      "tags": [
+        "test",
+        "api"
+      ],
+      "createdAt": "2026-01-11T12:34:00.264Z"
+    }
+  ]
 }
