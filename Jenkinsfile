@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Stage 1: Build - Installing dependencies...'
-                sh 'npm install'
+                bat 'npm install'
                 echo 'Build stage completed successfully.'
             }
         }
@@ -23,9 +23,9 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Stage 2: Test - Running backend unit tests...'
-                sh 'JEST_JUNIT_OUTPUT_DIR=test-results JEST_JUNIT_OUTPUT_NAME=backend-results.xml npm run test-backend -- --reporters=default --reporters=jest-junit'
+                bat 'set JEST_JUNIT_OUTPUT_DIR=test-results&& set JEST_JUNIT_OUTPUT_NAME=backend-results.xml&& npm run test-backend -- --reporters=default --reporters=jest-junit'
                 echo 'Running API tests...'
-                sh 'JEST_JUNIT_OUTPUT_DIR=test-results JEST_JUNIT_OUTPUT_NAME=api-results.xml npm run test-api -- --reporters=default --reporters=jest-junit'
+                bat 'set JEST_JUNIT_OUTPUT_DIR=test-results&& set JEST_JUNIT_OUTPUT_NAME=api-results.xml&& npm run test-api -- --reporters=default --reporters=jest-junit'
                 echo 'Test stage completed successfully.'
             }
             post {
@@ -38,19 +38,19 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Stage 3: Deploy - Building Docker image...'
-                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+                bat "docker build -t %DOCKER_IMAGE%:%DOCKER_TAG% ."
+                bat "docker tag %DOCKER_IMAGE%:%DOCKER_TAG% %DOCKER_IMAGE%:latest"
 
                 echo 'Loading image into Minikube...'
-                sh "minikube image load ${DOCKER_IMAGE}:latest"
+                bat "minikube image load %DOCKER_IMAGE%:latest"
 
                 echo 'Applying Kubernetes manifests...'
-                sh 'kubectl apply -f deployment.yaml'
-                sh 'kubectl apply -f service.yaml'
+                bat 'kubectl apply -f deployment.yaml'
+                bat 'kubectl apply -f service.yaml'
 
                 echo 'Restarting deployment to pick up new image...'
-                sh 'kubectl rollout restart deployment/devops-taskboard'
-                sh 'kubectl rollout status deployment/devops-taskboard --timeout=60s'
+                bat 'kubectl rollout restart deployment/devops-taskboard'
+                bat 'kubectl rollout status deployment/devops-taskboard --timeout=60s'
 
                 echo 'Deploy stage completed successfully.'
             }
