@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-taskboard
+  labels:
+    app: devops-taskboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-taskboard
+  template:
+    metadata:
+      labels:
+        app: devops-taskboard
+    spec:
+      containers:
+        - name: devops-taskboard
+          image: devops-taskboard:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
